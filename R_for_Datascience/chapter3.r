@@ -89,4 +89,63 @@ select(flights, contains("TIME"))
 
 
 
-#3.5 mutate()で新しい変数を追加する.
+#3.5 mutate()で新しい変数を追加する. ####
+
+flights_sml <- select(flights,
+                      year:day,
+                      ends_with("delay"),
+                      distance,
+                      air_time
+                      )
+
+mutate(flights_sml,
+       gain = arr_delay - dep_delay,
+       speed = distance/air_time*60
+       )
+
+mutate(flights_sml,
+       gain = arr_delay - dep_delay,
+       hours = air_time / 60,
+       gain_per_hour = gain / hours
+)
+
+transmute(flights,
+          gain = arr_delay - dep_delay,
+          hours = arr_delay / 60,
+          gain_per_hours = gain / hours
+          )
+
+#3.5.1 
+transmute(flights,
+          dep_time,
+          hours = dep_time %/% 100,
+          minute = dep_time %% 100,
+          )
+
+y <- c(1, 2, 2, NA, 3, 4)
+min_rank(y)
+min_rank(desc(y))
+
+#練習問題
+#1
+select(flights, dep_time, sched_dep_time)
+transmute(flights,
+          dep_time_minute = 
+            (dep_time %/% 100) * 60 + (dep_time %% 100),
+          sched_dep_time_minute = 
+            (sched_dep_time %/% 100) * 60 + (sched_dep_time %% 100)
+          )
+
+#2
+trans_to_minute <- function(time) {
+  return((time %/% 100) * 60 + (time %% 100))
+}
+
+transmute(flights,
+          air_time,
+          cal_air_time = trans_to_minute(arr_time) - trans_to_minute(dep_time)
+          )
+#??
+
+#5
+1:3 + 1:10
