@@ -1,6 +1,10 @@
 setwd( "C:/Users/amuta/Documents/R/R_studies/R_for_Datascience")
 getwd()
 
+#本章で必要なパッケージ
+library(nycflights13)
+library(tidyverse)
+
 #3.2 ####
 # 練習問題4.
 NA * 0 ## = NA これはInf * 0 = NaN だからである.
@@ -45,3 +49,44 @@ arrange(flights, desc(distance / air_time))
 #4
 arrange(flights, distance)
 arrange(flights, desc(distance))
+
+
+
+#3.4 select()で列を選ぶ ####
+
+select(flights, year, month, day)
+
+select(flights, year:day)
+
+select(flights, -(year:day))
+
+rename(flights, tail_num = tailnum) %>% 
+  select(tail_num)
+
+select(flights, time_hour, air_time, everything())
+
+#練習問題
+#1
+select(flights, dep_time, dep_delay, arr_time, arr_delay)
+select(flights, starts_with("dep"), starts_with("arr"))
+select(flights, contains("dep"), contains("arr"), -(contains("sched")), -carrier)
+       
+#2
+select(flights, dep_time, dep_time)
+
+#3
+?one_of()
+select(flights, year) #実行可能
+select(flights, "year") #実行可能
+
+col_name <- c("year", "month")
+select(flights, one_of(col_name))
+#tidyverseのバージョンの問題か？
+#one_of()関数を使わなくても正常に処理できている気がする.
+
+#4
+select(flights, contains("TIME"))
+
+
+
+#3.5 mutate()で新しい変数を追加する.
